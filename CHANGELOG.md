@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.1.0](https://github.com/dnbhq/release-config/compare/v1.0.2...v1.1.0) (2026-06-16)
+
+### Feat
+
+* add built-in CITATION.cff hook to createReleaseConfig ([8fb6beb](https://github.com/dnbhq/release-config/commit/8fb6beb54e558560789e5d3ccd5db028cf799380))
+
+### Docs
+
+* document built-in CITATION.cff hook and hook extension ([b725524](https://github.com/dnbhq/release-config/commit/b72552436cad6decf456eeef865fa439f42f69df))
+
+### Test
+
+* add test suite for CITATION.cff hook and hook merging ([3ea2e85](https://github.com/dnbhq/release-config/commit/3ea2e85cd384b5cf42b31639c884b9d8dc4748a0))
+
 ## [1.0.2](https://github.com/dnbhq/release-config/compare/v1.0.1...v1.0.2) (2026-06-13)
 
 ### Fix
