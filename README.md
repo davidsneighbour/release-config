@@ -10,6 +10,7 @@ The package provides a TypeScript config factory that keeps the usual release se
 * Conventional changelog generation through `@release-it/conventional-changelog`.
 * Changelog URLs generated from the consuming project's `package.json` `repository.url`.
 * Configurable conventional changelog types, scopes, and subscopes.
+* A built-in `before:git:release` hook that updates `CITATION.cff` when that file exists (see [Built-in CITATION.cff hook](#built-in-citationcff-hook)).
 
 ## Installation
 
@@ -155,7 +156,7 @@ export default config;
 
 ## Override release-it settings
 
-Use `overrides` for project-specific release-it settings. The merge is shallow for the main `git`, `github`, `npm`, and `plugins` objects.
+Use `overrides` for project-specific release-it settings. The merge is shallow for the main `git`, `github`, `npm`, and `plugins` objects. Hooks are merged by concatenation — see [Built-in CITATION.cff hook](#built-in-citationcff-hook) for details.
 
 ```ts
 import { createReleaseConfig } from "@dnbhq/release-config";
@@ -177,6 +178,51 @@ const config: Config = createReleaseConfig({
 
 export default config;
 ```
+
+## Built-in CITATION.cff hook
+
+Every config produced by `createReleaseConfig` includes a `before:git:release` hook that updates `CITATION.cff` if that file exists in the project root. When the file is absent the hook exits silently, so repositories without a `CITATION.cff` are unaffected.
+
+The hook sets three fields (only if the line already exists in the file):
+
+| Field | Updated to |
+|---|---|
+| `version` | `v<new-version>` |
+| `date-released` | today's date in `yyyy-mm-dd` format |
+| `commit` | the HEAD commit hash at the point the hook runs (the last real code commit, before the release-it bump commit) |
+
+After updating the file the hook stages it with `git add CITATION.cff` so it is included in the release commit.
+
+### Adding your own hooks
+
+Pass additional hooks through `overrides.hooks`. The built-in CITATION.cff hook is always placed first in the array so it runs before any project-level hooks. All other entries from `overrides.hooks` are appended in the order you supply them:
+
+```ts
+import { createReleaseConfig } from "@dnbhq/release-config";
+import type { Config } from "release-it";
+
+const config: Config = createReleaseConfig({
+  overrides: {
+    hooks: {
+      "before:git:release": ["node scripts/update-version-file.mjs"],
+      "after:git:release": ["echo release tagged"]
+    }
+  }
+});
+
+export default config;
+```
+
+The resulting `before:git:release` array will be:
+
+```
+[
+  "<built-in CITATION.cff hook>",
+  "node scripts/update-version-file.mjs"
+]
+```
+
+Hook arrays for different lifecycle events (e.g. `after:git:release`) are carried through as-is without any built-in entries from this package.
 
 ## Repository URL fallback
 
@@ -221,7 +267,7 @@ npm run build
 npm test
 ```
 
-`npm test` currently runs the TypeScript build. That makes the package testable without adding a separate test runner.
+`npm test` runs the TypeScript build and then the test suite with Node's built-in test runner.
 
 ## Test in another repository before publishing
 
