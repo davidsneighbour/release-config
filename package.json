@@ -25,7 +25,7 @@
   "scripts": {
     "build": "tsc --project tsconfig.json",
     "prepublishOnly": "npm run build",
-    "test": "npm run build",
+    "test": "npm run build && node --test src/index.test.ts",
     "release": "release-it --config .release-it.ts --ci"
   },
   "files": [
