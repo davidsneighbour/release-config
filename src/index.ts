@@ -2,6 +2,13 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Config } from 'release-it';
 
+type Hooks = NonNullable<Config['hooks']>;
+type HookKey = keyof Hooks;
+type HookValue = string | string[];
+
+const CITATION_CFF_HOOK =
+  `if [ -f CITATION.cff ]; then last_commit=$(git rev-parse HEAD); release_date=$(date +%F); sed -Ei "s/^version: .*/version: v\${version}/" CITATION.cff; sed -Ei "s/^date-released: .*/date-released: $release_date/" CITATION.cff; sed -Ei "s/^commit: .*/commit: $last_commit/" CITATION.cff; git add CITATION.cff; fi`;
+
 type JsonObject = Record<string, unknown>;
 
 export interface ChangelogScopeOptions {
@@ -116,6 +123,9 @@ export function createReleaseConfig(options: ReleaseConfigOptions = {}): Config 
   const baseConfig: Config = {
     "$schema": "https://unpkg.com/release-it@20/schema/release-it.json",
     quiet: true, // don't print changelog
+    hooks: {
+      "before:git:release": [CITATION_CFF_HOOK]
+    },
     npm: {
       publish: false
     },
@@ -289,8 +299,28 @@ function mergeConfig(baseConfig: Config, overrides: Partial<Config>): Config {
     plugins: {
       ...baseConfig.plugins,
       ...overrides.plugins
-    }
+    },
+    hooks: mergeHooks(baseConfig.hooks ?? {}, overrides.hooks ?? {})
   };
+}
+
+function mergeHooks(base: Hooks, overrides: Hooks): Hooks {
+  const result: Hooks = {};
+  const allKeys = new Set([
+    ...Object.keys(base) as HookKey[],
+    ...Object.keys(overrides) as HookKey[]
+  ]);
+
+  for (const key of allKeys) {
+    const toArr = (v: HookValue | undefined): string[] =>
+      v === undefined ? [] : Array.isArray(v) ? v : [v];
+    (result as Record<string, string[]>)[key as string] = [
+      ...toArr(base[key]),
+      ...toArr(overrides[key])
+    ];
+  }
+
+  return result;
 }
 
 function titleCase(value: string): string {
