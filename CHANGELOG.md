@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.3](https://github.com/dnbhq/release-config/compare/v1.1.2...v1.1.3) (2026-07-27)
+
+### Fix
+
+* **ci:** resolve zizmor findings and pin actions to hashes ([54f705f](https://github.com/dnbhq/release-config/commit/54f705f70e50889cf580e5d5c9654a6f0fbdf5c4))
+
 ## [1.1.2](https://github.com/dnbhq/release-config/compare/v1.1.1...v1.1.2) (2026-07-27)
 
 ### Fix
