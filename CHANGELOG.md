@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.1.2](https://github.com/dnbhq/release-config/compare/v1.1.1...v1.1.2) (2026-07-27)
+
+### Fix
+
+* node 25 is eol ([3bef38c](https://github.com/dnbhq/release-config/commit/3bef38c1d75e9d30fc0b30192ae6423360689446))
+
+### Build
+
+* **deps:** update dependencies ([bcdefe7](https://github.com/dnbhq/release-config/commit/bcdefe7529507ead52744e32b9682321b833d8f0))
+
 ## [1.1.1](https://github.com/dnbhq/release-config/compare/v1.1.0...v1.1.1) (2026-07-27)
 
 ### Fix
