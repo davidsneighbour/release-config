@@ -1,0 +1,98 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  schedule:
+    - cron: "17 3 * * 2"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  node-versions:
+    name: Determine supported Node versions
+    runs-on: ubuntu-latest
+
+    outputs:
+      matrix: ${{ steps.versions.outputs.matrix }}
+
+    steps:
+      - name: Determine non-EOL Node versions
+        id: versions
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          schedule_file="$(mktemp)"
+          trap 'rm -f "$schedule_file"' EXIT
+
+          curl \
+            --fail \
+            --silent \
+            --show-error \
+            --location \
+            --output "$schedule_file" \
+            "https://raw.githubusercontent.com/nodejs/Release/main/schedule.json"
+
+          matrix="$(
+            jq \
+              --compact-output \
+              --arg today "$(date --utc +%F)" \
+              '
+                [
+                  to_entries[]
+                  | select(.value.start <= $today)
+                  | select(.value.end >= $today)
+                  | .key
+                  | ltrimstr("v")
+                  | tonumber
+                ]
+                | sort
+              ' \
+              "$schedule_file"
+          )"
+
+          if [[ "$matrix" == "[]" ]]; then
+            printf '%s\n' "No supported Node versions were found." >&2
+            exit 1
+          fi
+
+          printf 'matrix=%s\n' "$matrix" >> "$GITHUB_OUTPUT"
+          printf 'Testing Node versions: %s\n' "$matrix"
+
+  test:
+    name: Node ${{ matrix.node-version }}
+    needs:
+      - node-versions
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: ${{ fromJSON(needs.node-versions.outputs.matrix) }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+
+      - name: Show runtime versions
+        run: |
+          node --version
+          npm --version
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Test
+        run: npm test
