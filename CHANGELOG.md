@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.1](https://github.com/dnbhq/release-config/compare/v1.1.0...v1.1.1) (2026-07-27)
+
+### Fix
+
+* widen peerDependency ranges for release-it@21 and conventional-changelog@12 ([ed1b4d6](https://github.com/dnbhq/release-config/commit/ed1b4d65a3672e394a45d53586ac72f0201a1480))
+
 ## [1.1.0](https://github.com/dnbhq/release-config/compare/v1.0.2...v1.1.0) (2026-06-16)
 
 ### Feat
