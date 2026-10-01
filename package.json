@@ -43,8 +43,7 @@
     "provenance": true
   },
   "engines": {
-    "node": "^22.22.2 || ^24.15.0 || ^26.0.0",
-    "npm": ">=11.0.0"
+    "node": "^22.22.2 || ^24.15.0 || ^26.0.0"
   },
   "bin": {
     "release-config-print": "./dist/print-config.js"
