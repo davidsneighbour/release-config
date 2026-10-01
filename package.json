@@ -12,6 +12,7 @@
   },
   "homepage": "https://github.com/davidsneighbour/release-config#readme",
   "devDependencies": {
+    "@dnbhq/markdownlint-config": "0.2.11",
     "@dnbhq/tsconfig": "0.1.6",
     "@release-it/conventional-changelog": "12.0.2",
     "@types/node": "26.6.3",
@@ -28,7 +29,9 @@
     "test": "npm run build && node --test \"src/**/*.test.ts\"",
     "release": "release-it --config .release-it.ts --ci",
     "release:force": "release-it --config .release-it.ts --ci --no-increment --no-git --no-npm --no-plugins.@release-it/conventional-changelog.infile",
-    "release:config": "node src/print-config.ts --config .release-it.ts"
+    "release:config": "node src/print-config.ts --config .release-it.ts",
+    "lint:markdown": "markdownlint-cli2 --config ./node_modules/@dnbhq/markdownlint-config/.markdownlint-cli2.jsonc \"**/*.{md,mdx}\" \"#CHANGELOG.md\" \"#LICENSE.md\" \"#scratch\"",
+    "lint:markdown:fix": "markdownlint-cli2 --config ./node_modules/@dnbhq/markdownlint-config/.markdownlint-cli2.jsonc --fix \"**/*.{md,mdx}\" \"#CHANGELOG.md\" \"#LICENSE.md\" \"#scratch\""
   },
   "files": [
     "dist",
