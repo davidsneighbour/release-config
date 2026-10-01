@@ -1,5 +1,40 @@
 # Changelog
 
+## [2.0.0](https://github.com/davidsneighbour/release-config/compare/v1.1.5...v2.0.0) (2026-10-01)
+
+### ⚠ BREAKING CHANGES
+
+* release-it now stops with "Must be on branch main" when
+  a release runs on any other branch. Projects that release from another
+  branch must set overrides.git.requireBranch (or git.requireBranch when
+  they extend the config from GitHub).
+
+### Feat
+
+* add release-config-print command to show the full config ([f7f179d](https://github.com/davidsneighbour/release-config/commit/f7f179d846084116ed3ef67bb3e8bc46e90f3557))
+* apply scopes to the release level and keep dots in repo names ([284933a](https://github.com/davidsneighbour/release-config/commit/284933a87c880c1e0f334f78ccff34d5969d75c7))
+* require the main branch for releases ([df440d0](https://github.com/davidsneighbour/release-config/commit/df440d008ce0432e75522dd48783cebb612de70d))
+* show functions in the release-config-print output ([8e58899](https://github.com/davidsneighbour/release-config/commit/8e5889909e492aa5e13639b0e99718d5b4f97b24))
+
+### Fix
+
+* allow extending the config from GitHub ([a45087d](https://github.com/davidsneighbour/release-config/commit/a45087ddcdde663cc6420d16befd634fc1436ec8))
+* point repository URLs to davidsneighbour/release-config ([52210e8](https://github.com/davidsneighbour/release-config/commit/52210e8ce96db40f6a8a6b701f7fc5b47dad7ee0))
+* remove the engines.npm requirement ([e53bbf3](https://github.com/davidsneighbour/release-config/commit/e53bbf37944aaac06028750eee150e0a1e64133a))
+
+### Docs
+
+* add CITATION.cff ([8ba29d1](https://github.com/davidsneighbour/release-config/commit/8ba29d1687d69057c6b73284b855b5d5d6bea83b))
+* fix markdownlint findings in README.md ([888bdf0](https://github.com/davidsneighbour/release-config/commit/888bdf027092bfaa2fb1bd9861ae9463b14960a6))
+
+### Build
+
+* add @dnbhq/markdownlint-config and markdown lint scripts ([b4ad711](https://github.com/davidsneighbour/release-config/commit/b4ad7117054287c405e1097b196ba5dc7a6afb02))
+
+### Ci
+
+* add a weekly Node.js version policy check ([a09cb82](https://github.com/davidsneighbour/release-config/commit/a09cb82c30d1ad14668f92f6cb5326ed35ecf47e))
+
 ## [1.1.5](https://github.com/davidsneighbour/release-config/compare/v1.1.4...v1.1.5) (2026-10-01)
 
 ### Build
