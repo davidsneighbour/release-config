@@ -1,3 +1,5 @@
+# @dnbhq/release-config
+
 Reusable `release-it` configuration for @davidsneighbour's projects.
 
 The package provides a TypeScript config factory that keeps the usual release setup in one place while still allowing project-level overrides.
@@ -18,11 +20,11 @@ The package provides a TypeScript config factory that keeps the usual release se
 There are two ways to use this configuration:
 
 | Option | Use it when | Install |
-|---|---|---|
+| --- | --- | --- |
 | [Extend the defaults from GitHub](#extend-the-defaults-from-github) | You want the defaults 1:1 and no code in your project. | `release-it`, `@release-it/conventional-changelog` |
 | [TypeScript config factory](#installation) | You want to change scopes, the token, the changelog file, hooks, or other settings. | `@dnbhq/release-config`, `release-it`, `@release-it/conventional-changelog` |
 
-## Extend the defaults from GitHub
+## Extend the defaults from gitHub
 
 release-it can extend a configuration that lives in a GitHub repository. Use this for a 1:1 integration of the defaults of this package.
 
@@ -364,14 +366,14 @@ const config: Config = createReleaseConfig({
 export default config;
 ```
 
-## Built-in CITATION.cff hook
+## Built-in CITATION.Cff hook
 
 Every config produced by `createReleaseConfig` includes a `before:git:release` hook that updates `CITATION.cff` if that file exists in the project root. When the file is absent the hook exits silently, so repositories without a `CITATION.cff` are unaffected.
 
 The hook sets three fields (only if the line already exists in the file):
 
 | Field | Updated to |
-|---|---|
+| --- | --- |
 | `version` | `v<new-version>` |
 | `date-released` | today's date in `yyyy-mm-dd` format |
 | `commit` | the HEAD commit hash at the point the hook runs (the last real code commit, before the release-it bump commit) |
@@ -400,7 +402,7 @@ export default config;
 
 The resulting `before:git:release` array will be:
 
-```
+```json
 [
   "<built-in CITATION.cff hook>",
   "node scripts/update-version-file.mjs"
@@ -466,7 +468,7 @@ const config: Config = createReleaseConfig({
 export default config;
 ```
 
-## Custom package.json path
+## Custom package.Json path
 
 By default, the config reads `package.json` from `process.cwd()`. For unusual repository layouts, pass an explicit path:
 
@@ -554,4 +556,3 @@ const config: Config = createReleaseConfig({
 
 export default config;
 ```
-
