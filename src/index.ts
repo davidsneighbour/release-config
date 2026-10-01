@@ -131,6 +131,7 @@ export function createReleaseConfig(options: ReleaseConfigOptions = {}): Config 
     },
     // https://github.com/release-it/release-it/blob/main/docs/git.md
     git: {
+      requireBranch: "main",
       requireCleanWorkingDir: true,
       commit: true,
       commitMessage: "chore(release): v${version}",

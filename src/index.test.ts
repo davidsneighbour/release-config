@@ -49,3 +49,58 @@ describe('createReleaseConfig – CITATION.cff hook', () => {
     assert.deepEqual(hooks['after:git:release'], ['echo done']);
   });
 });
+
+describe('createReleaseConfig – git requirements', () => {
+  test('requires the main branch by default', () => {
+    const config = createReleaseConfig();
+
+    assert.equal(config.git?.requireBranch, 'main');
+  });
+
+  test('allows a different release branch through overrides', () => {
+    const config = createReleaseConfig({
+      overrides: {
+        git: { requireBranch: 'develop' }
+      }
+    });
+
+    assert.equal(config.git?.requireBranch, 'develop');
+  });
+
+  test('allows disabling the branch check through overrides', () => {
+    const config = createReleaseConfig({
+      overrides: {
+        git: { requireBranch: false }
+      }
+    });
+
+    assert.equal(config.git?.requireBranch, false);
+  });
+
+  test('requires a clean working directory by default', () => {
+    const config = createReleaseConfig();
+
+    assert.equal(config.git?.requireCleanWorkingDir, true);
+  });
+
+  test('allows disabling the clean working directory check through overrides', () => {
+    const config = createReleaseConfig({
+      overrides: {
+        git: { requireCleanWorkingDir: false }
+      }
+    });
+
+    assert.equal(config.git?.requireCleanWorkingDir, false);
+  });
+
+  test('keeps the other git defaults when one git setting is overridden', () => {
+    const config = createReleaseConfig({
+      overrides: {
+        git: { requireBranch: 'develop' }
+      }
+    });
+
+    assert.equal(config.git?.requireCleanWorkingDir, true);
+    assert.equal(config.git?.tagName, 'v${version}');
+  });
+});

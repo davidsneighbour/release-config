@@ -5,6 +5,7 @@ The package provides a TypeScript config factory that keeps the usual release se
 ## What it configures
 
 * `release-it` with npm publishing disabled by default.
+* Releases only from the `main` branch and only from a clean working directory (see [Release branch](#release-branch) and [Clean working directory](#clean-working-directory)).
 * Git release commits and tags in the format `chore(release): v${version}` and `v${version}`.
 * GitHub releases using `GITHUB_TOKEN_CONTENT_PRIVATE` by default.
 * Conventional changelog generation through `@release-it/conventional-changelog`.
@@ -147,6 +148,80 @@ Default release rules:
 * `feat`, `prompt`, `instructions`, and `skill` are configured as minor-level groups.
 * `fix`, `perf`, `refactor`, `docs`, `style`, `test`, `build`, `ci`, and `chore` are configured as patch-level groups.
 * The subscopes `feat(fix)`, `prompt(fix)`, `instructions(fix)`, and `skill(fix)` are explicitly listed as changelog entries but excluded from the minor-type set.
+
+## Release branch
+
+By default, release-it stops with `Must be on branch main` when the current branch is not `main` (`git.requireBranch: "main"`).
+
+If your main branch has a different name, set it through `overrides`:
+
+```ts
+import { createReleaseConfig } from "@dnbhq/release-config";
+import type { Config } from "release-it";
+
+const config: Config = createReleaseConfig({
+  overrides: {
+    git: {
+      requireBranch: "master"
+    }
+  }
+});
+
+export default config;
+```
+
+With the [GitHub extends option](#extend-the-defaults-from-github), set it in `.release-it.json`:
+
+```json
+{
+  "$schema": "https://unpkg.com/release-it@21/schema/release-it.json",
+  "extends": "github:davidsneighbour/release-config",
+  "git": {
+    "requireBranch": "master"
+  }
+}
+```
+
+`requireBranch` also accepts an array of branch names or patterns, for example `["main", "release/*"]`. Use `false` to turn off the branch check.
+
+## Clean working directory
+
+By default, release-it stops with `Working dir must be clean` when there are uncommitted changes (`git.requireCleanWorkingDir: true`).
+
+To turn off the check, set it through `overrides`:
+
+```ts
+import { createReleaseConfig } from "@dnbhq/release-config";
+import type { Config } from "release-it";
+
+const config: Config = createReleaseConfig({
+  overrides: {
+    git: {
+      requireCleanWorkingDir: false
+    }
+  }
+});
+
+export default config;
+```
+
+With the [GitHub extends option](#extend-the-defaults-from-github), set it in `.release-it.json`:
+
+```json
+{
+  "$schema": "https://unpkg.com/release-it@21/schema/release-it.json",
+  "extends": "github:davidsneighbour/release-config",
+  "git": {
+    "requireCleanWorkingDir": false
+  }
+}
+```
+
+To skip the check for one run only, use the release-it flag:
+
+```bash
+npx release-it --no-git.requireCleanWorkingDir
+```
 
 ## Configure conventional changelog types and subscopes
 
