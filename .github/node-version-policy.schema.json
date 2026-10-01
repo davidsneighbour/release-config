@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Node.js version policy",
+  "description": "Selects the Node.js release lines that this repository declares and tests. Read by scripts/check-node-version-policy.ts.",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "policy": {
+      "description": "lts: the primary Node.js version is the newest active LTS major. active-latest: the primary Node.js version is the newest active major, including Current releases.",
+      "enum": ["lts", "active-latest"]
+    },
+    "packageType": {
+      "description": "application: engines.node allows only the primary major. library: engines.node allows several active release lines.",
+      "enum": ["application", "library"]
+    },
+    "includeAllActiveLts": {
+      "description": "For libraries: include every active LTS major in engines.node.",
+      "type": "boolean"
+    },
+    "includeCurrentForLibraries": {
+      "description": "For libraries: also include the active Current major in engines.node.",
+      "type": "boolean"
+    }
+  },
+  "required": ["policy", "packageType", "includeAllActiveLts", "includeCurrentForLibraries"],
+  "additionalProperties": false
+}

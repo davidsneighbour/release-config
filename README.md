@@ -496,6 +496,30 @@ npm test
 
 `npm test` runs the TypeScript build and then the test suite with Node's built-in test runner.
 
+## Node version policy
+
+This package follows the *latest active release* policy for libraries. The policy is set in [`.github/node-version-policy.json`](.github/node-version-policy.json). The active Node.js release lines come from the [official Node.js release schedule](https://github.com/nodejs/Release/blob/main/schedule.json).
+
+* `engines.node` in `package.json` covers every active release line: all active LTS lines and the Current line. The minimum patch versions come from the `engines` of `release-it` and `@release-it/conventional-changelog`.
+* The publish workflow uses the newest active release line.
+* The "Test" workflow tests every active release line.
+
+Check the declarations locally:
+
+```bash
+node scripts/check-node-version-policy.ts --check
+```
+
+Update the declarations that can be fixed automatically:
+
+```bash
+node scripts/check-node-version-policy.ts --write
+```
+
+The `--write` option keeps the minimum patch version of release lines that stay supported and adds `^<major>.0.0` for new release lines. Use `--help` for all options.
+
+The workflow [`.github/workflows/check-node-version-policy.yml`](.github/workflows/check-node-version-policy.yml) runs this check every Monday at 03:17 UTC and can also be started manually. When a declaration is stale, the run fails, and the job summary lists each file with its current and expected value. Findings marked "manual" need a manual fix, for example `npm@latest` installations or an `engines.npm` range that excludes the npm version bundled with a supported Node.js release.
+
 ## Test in another repository before publishing
 
 From this package directory:
