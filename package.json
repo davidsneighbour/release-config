@@ -5,12 +5,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dnbhq/release-config.git"
+    "url": "git+https://github.com/davidsneighbour/release-config.git"
   },
   "bugs": {
-    "url": "https://github.com/dnbhq/release-config/issues"
+    "url": "https://github.com/davidsneighbour/release-config/issues"
   },
-  "homepage": "https://github.com/dnbhq/release-config#readme",
+  "homepage": "https://github.com/davidsneighbour/release-config#readme",
   "devDependencies": {
     "@dnbhq/tsconfig": "0.1.6",
     "@release-it/conventional-changelog": "12.0.2",
