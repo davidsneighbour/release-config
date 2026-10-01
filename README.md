@@ -12,6 +12,49 @@ The package provides a TypeScript config factory that keeps the usual release se
 * Configurable conventional changelog types, scopes, and subscopes.
 * A built-in `before:git:release` hook that updates `CITATION.cff` when that file exists (see [Built-in CITATION.cff hook](#built-in-citationcff-hook)).
 
+## Configuration options
+
+There are two ways to use this configuration:
+
+| Option | Use it when | Install |
+|---|---|---|
+| [Extend the defaults from GitHub](#extend-the-defaults-from-github) | You want the defaults 1:1 and no code in your project. | `release-it`, `@release-it/conventional-changelog` |
+| [TypeScript config factory](#installation) | You want to change scopes, the token, the changelog file, hooks, or other settings. | `@dnbhq/release-config`, `release-it`, `@release-it/conventional-changelog` |
+
+## Extend the defaults from GitHub
+
+release-it can extend a configuration that lives in a GitHub repository. Use this for a 1:1 integration of the defaults of this package.
+
+Install release-it and the changelog plugin:
+
+```bash
+npm install --save-dev release-it @release-it/conventional-changelog
+```
+
+Create `.release-it.json` in the consuming repository:
+
+```json
+{
+  "$schema": "https://unpkg.com/release-it@21/schema/release-it.json",
+  "extends": "github:davidsneighbour/release-config"
+}
+```
+
+If you already have a release-it config (for example `.release-it.json` or the `release-it` key in `package.json`), add only the `extends` key:
+
+```json
+"extends": "github:davidsneighbour/release-config"
+```
+
+How it works:
+
+* On each run, release-it downloads this repository into `node_modules/.c12/` and loads its root [`.release-it.ts`](.release-it.ts). That file calls `createReleaseConfig()` without options, so you get exactly the [default behaviour](#default-behaviour). Each run needs network access to GitHub.
+* You do not need to install `@dnbhq/release-config` for this option.
+* The repository URL for changelog links still comes from your project's `package.json` (see [Minimal setup](#minimal-setup)).
+* Without a ref, release-it uses the latest commit on `main`. To pin a version, add a release tag: `github:davidsneighbour/release-config#vX.Y.Z`. Tags up to and including `v1.1.5` do not work with `extends`, because their `.release-it.ts` imports the built package, which is not in the repository.
+* Settings in your own config are deep-merged on top of the defaults. Arrays are joined, with your entries first. For example, your `before:git:release` hooks run before the built-in [CITATION.cff hook](#built-in-citationcff-hook). This is the opposite order of `overrides.hooks` in the factory.
+* You cannot remove a default by leaving it out. If you need more control, use the TypeScript config factory.
+
 ## Installation
 
 Install the package together with its peer dependencies:
