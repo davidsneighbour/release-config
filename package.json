@@ -26,7 +26,8 @@
     "build": "tsc --project tsconfig.json",
     "prepublishOnly": "npm run build",
     "test": "npm run build && node --test src/index.test.ts",
-    "release": "release-it --config .release-it.ts --ci"
+    "release": "release-it --config .release-it.ts --ci",
+    "release:force": "release-it --config .release-it.ts --ci --no-increment --no-git --no-npm --no-plugins.@release-it/conventional-changelog.infile"
   },
   "files": [
     "dist",
