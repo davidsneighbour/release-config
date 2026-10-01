@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.5](https://github.com/davidsneighbour/release-config/compare/v1.1.4...v1.1.5) (2026-10-01)
+
+### Build
+
+* **fix:** remove dnbhq config and add release:force ([a5a0905](https://github.com/davidsneighbour/release-config/commit/a5a090502695ea12f36f193554dc92d01ec0e3fe))
+
 ## [1.1.4](https://github.com/dnbhq/release-config/compare/v1.1.3...v1.1.4) (2026-10-01)
 
 ### Fix
