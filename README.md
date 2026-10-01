@@ -223,6 +223,38 @@ To skip the check for one run only, use the release-it flag:
 npx release-it --no-git.requireCleanWorkingDir
 ```
 
+## Show the full config
+
+The package has a `release-config-print` command. It loads your release-it config the same way release-it does and prints the result as JSON: the release-it defaults, the `extends` source, and your local settings, merged. It does not release anything and does not change files.
+
+Add a script to `package.json` in the consuming repository:
+
+```json
+{
+  "scripts": {
+    "release:config": "release-config-print"
+  }
+}
+```
+
+Then run:
+
+```bash
+npm run release:config
+```
+
+Without options, the command uses the same lookup as release-it (`.release-it.ts`, `.release-it.json`, the `release-it` key in `package.json`, and other release-it config files). For a config file in another place, use `--config`:
+
+```json
+{
+  "scripts": {
+    "release:config": "release-config-print --config config/release-it.ts"
+  }
+}
+```
+
+The command needs `@dnbhq/release-config` installed as a dev dependency. This is also true when you use the [GitHub extends option](#extend-the-defaults-from-github).
+
 ## Configure conventional changelog types and subscopes
 
 Use `scopes.minorTypes` to define the commit types that should be treated as minor-level changelog groups:

@@ -25,9 +25,10 @@
   "scripts": {
     "build": "tsc --project tsconfig.json",
     "prepublishOnly": "npm run build",
-    "test": "npm run build && node --test src/index.test.ts",
+    "test": "npm run build && node --test \"src/**/*.test.ts\"",
     "release": "release-it --config .release-it.ts --ci",
-    "release:force": "release-it --config .release-it.ts --ci --no-increment --no-git --no-npm --no-plugins.@release-it/conventional-changelog.infile"
+    "release:force": "release-it --config .release-it.ts --ci --no-increment --no-git --no-npm --no-plugins.@release-it/conventional-changelog.infile",
+    "release:config": "node src/print-config.ts --config .release-it.ts"
   },
   "files": [
     "dist",
@@ -41,6 +42,9 @@
   "engines": {
     "node": "^22.22.2 || ^24.15.0 || ^26.0.0",
     "npm": ">=11.0.0"
+  },
+  "bin": {
+    "release-config-print": "./dist/print-config.js"
   },
   "exports": {
     ".": {
