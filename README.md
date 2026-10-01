@@ -9,8 +9,8 @@ The package provides a TypeScript config factory that keeps the usual release se
 * Git release commits and tags in the format `chore(release): v${version}` and `v${version}`.
 * GitHub releases using `GITHUB_TOKEN_CONTENT_PRIVATE` by default.
 * Conventional changelog generation through `@release-it/conventional-changelog`.
-* Changelog URLs generated from the consuming project's `package.json` `repository.url`.
-* Configurable conventional changelog types, scopes, and subscopes.
+* Changelog URLs generated from the consuming project's `package.json` `repository.url`, also for repository names with a dot (see [Repository names with a dot](#repository-names-with-a-dot)).
+* Configurable conventional changelog types, scopes, and subscopes. They control the changelog sections and the release level (major, minor, or patch).
 * A built-in `before:git:release` hook that updates `CITATION.cff` when that file exists (see [Built-in CITATION.cff hook](#built-in-citationcff-hook)).
 
 ## Configuration options
@@ -145,9 +145,13 @@ export default config;
 
 Default release rules:
 
-* `feat`, `prompt`, `instructions`, and `skill` are configured as minor-level groups.
-* `fix`, `perf`, `refactor`, `docs`, `style`, `test`, `build`, `ci`, and `chore` are configured as patch-level groups.
-* The subscopes `feat(fix)`, `prompt(fix)`, `instructions(fix)`, and `skill(fix)` are explicitly listed as changelog entries but excluded from the minor-type set.
+* `feat`, `prompt`, `instructions`, and `skill` create a minor release.
+* `fix`, `perf`, `refactor`, `docs`, `style`, `test`, `build`, `ci`, and `chore` create a patch release.
+* `feat(fix)`, `prompt(fix)`, `instructions(fix)`, and `skill(fix)` create a patch release. They stay in the changelog section of their type.
+* A breaking change creates a major release: `!` after the type or scope (`fix!:`, `feat(api)!:`), or a `BREAKING CHANGE:` footer.
+* Other types do not change the release level. If no commit sets a level, release-it creates a patch release.
+
+The package sets its own `whatBump` function on `@release-it/conventional-changelog` to apply these rules. The `conventionalcommits` preset alone creates a minor release only for `feat` commits.
 
 ## Release branch
 
@@ -287,6 +291,37 @@ instructions(fix): repair repository setup instructions
 skill(fix): fix package export instructions
 ```
 
+### Allow a minor release only for some subscopes
+
+Use `scopes.minorInclusionSubscopes` when only some subscopes of a type create a minor release. Commits of that type with another subscope or without a subscope create a patch release. Each type in `minorInclusionSubscopes` must also be in `minorTypes`, otherwise `createReleaseConfig` throws an error.
+
+```ts
+import { createReleaseConfig } from "@dnbhq/release-config";
+import type { Config } from "release-it";
+
+const config: Config = createReleaseConfig({
+  scopes: {
+    minorTypes: ["feat", "content"],
+    minorInclusionSubscopes: {
+      content: ["new"]
+    }
+  }
+});
+
+export default config;
+```
+
+With this config:
+
+```text
+content(new): add page about boat tours   -> minor
+content(fix): correct opening hours       -> patch
+content: update photos                    -> patch
+feat: add search                          -> minor
+```
+
+The subscope must match exactly. `minorExclusionSubscopes` is applied first, so a subscope in both lists creates a patch release.
+
 ## Configure patch-level groups
 
 Use `scopes.patchTypes` when a project needs a narrower or broader changelog grouping:
@@ -306,7 +341,7 @@ export default config;
 
 ## Override release-it settings
 
-Use `overrides` for project-specific release-it settings. The merge is shallow for the main `git`, `github`, `npm`, and `plugins` objects. Hooks are merged by concatenation — see [Built-in CITATION.cff hook](#built-in-citationcff-hook) for details.
+Use `overrides` for project-specific release-it settings. The merge is shallow for the main `git`, `github`, `npm`, and `plugins` objects. If you set `overrides.plugins["@release-it/conventional-changelog"]`, it replaces the complete plugin config of this package, including the changelog file, the link context, and the `whatBump` function. Hooks are merged by concatenation — see [Built-in CITATION.cff hook](#built-in-citationcff-hook) for details.
 
 ```ts
 import { createReleaseConfig } from "@dnbhq/release-config";
@@ -373,6 +408,46 @@ The resulting `before:git:release` array will be:
 ```
 
 Hook arrays for different lifecycle events (e.g. `after:git:release`) are carried through as-is without any built-in entries from this package.
+
+## Update the version in other files
+
+The built-in hook updates only `CITATION.cff`. To write the new version into other files, use the [`@release-it/bumper`](https://github.com/release-it/bumper) plugin. It supports JSON, YAML, TOML, INI, XML, HTML, and text files, and it can set a version at a path such as `metadata.version`.
+
+```bash
+npm install --save-dev @release-it/bumper
+```
+
+Add the plugin through `overrides.plugins`. The other plugins of this package stay in place:
+
+```ts
+import { createReleaseConfig } from "@dnbhq/release-config";
+import type { Config } from "release-it";
+
+const config: Config = createReleaseConfig({
+  overrides: {
+    plugins: {
+      "@release-it/bumper": {
+        out: [
+          { file: "manifest.json", path: "version" },
+          { file: "src/version.ts", type: "text/plain" }
+        ]
+      }
+    }
+  }
+});
+
+export default config;
+```
+
+For text files, the plugin replaces each occurrence of the current version with the new version. If the current version is not in the file, the file does not change. Make sure that the version string does not occur in the file for other reasons, for example as a dependency version.
+
+With the [GitHub extends option](#extend-the-defaults-from-github), add the same `plugins` key to `.release-it.json`.
+
+## Repository names with a dot
+
+`@release-it/conventional-changelog` reads the repository from the git remote. Its URL parser cuts the part after the last dot from the repository name, for example `kollitsch.dev` becomes `kollitsch` ([release-it/conventional-changelog#153](https://github.com/release-it/conventional-changelog/issues/153), [TrigenSoftware/simple-libs#51](https://github.com/TrigenSoftware/simple-libs/issues/51)). The changelog and GitHub release links then point to a repository that does not exist.
+
+To prevent this, the package sets `host`, `owner`, `repository`, and `repoUrl` in the plugin's `context` from the `package.json` repository URL. These values have priority over the values from the git remote. You do not need a project-level workaround. If your `.release-it.ts` sets `context` or the `*UrlFormat` preset options after `createReleaseConfig()` for this reason, you can remove that code.
 
 ## Repository URL fallback
 
