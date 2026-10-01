@@ -20,6 +20,13 @@ describe('release-config-print', () => {
     assert.equal(config.npm['publish'], false);
   });
 
+  test('shows functions in the config by name', async () => {
+    const { stdout } = await execFileAsync('node', [script, '--config', '.release-it.ts'], { cwd: projectRoot });
+    const config = JSON.parse(stdout) as { plugins: Record<string, Record<string, unknown>> };
+
+    assert.equal(config.plugins['@release-it/conventional-changelog']?.['whatBump'], '[Function whatBump]');
+  });
+
   test('prints usage with --help', async () => {
     const { stdout } = await execFileAsync('node', [script, '--help'], { cwd: projectRoot });
 

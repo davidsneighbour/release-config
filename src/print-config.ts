@@ -47,7 +47,12 @@ async function main(): Promise<void> {
   const config = new releaseIt.Config(values.config === undefined ? {} : { config: values.config });
 
   await config.init();
-  console.log(JSON.stringify(config.getContext(), null, 2));
+  console.log(JSON.stringify(config.getContext(), showFunctions, 2));
+}
+
+// JSON.stringify drops functions such as the plugin's whatBump. Show them by name instead.
+function showFunctions(_key: string, value: unknown): unknown {
+  return typeof value === 'function' ? `[Function ${value.name || 'anonymous'}]` : value;
 }
 
 main().catch((error: unknown) => {
