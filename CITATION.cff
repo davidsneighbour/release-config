@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use code or cite this website, please cite it as below."
+authors:
+  - family-names: "Kollitsch"
+    given-names: "Patrick"
+    orcid: "https://orcid.org/0000-0001-6250-2135"
+title: "@dnbhq/release-config"
+version: v0.0.0
+date-released: 2026-10-01
+url: "https://github.com/davidsneighbour/release-config"
+repository-code: "https://github.com/davidsneighbour/release-config"
+license: "MIT"
+commit: e043edb1a2829bf9ee49ff6b9f6f95c2bac26647
+keywords:
+  - release-it
+  - dnbhq
+  - configuration
