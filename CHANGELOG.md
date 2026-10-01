@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.4](https://github.com/dnbhq/release-config/compare/v1.1.3...v1.1.4) (2026-10-01)
+
+### Fix
+
+* update dependencies and override undici requirements ([300e585](https://github.com/dnbhq/release-config/commit/300e585702dca0454d62d6f4aecd3dd6d62420e2))
+
 ## [1.1.3](https://github.com/dnbhq/release-config/compare/v1.1.2...v1.1.3) (2026-07-27)
 
 ### Fix
