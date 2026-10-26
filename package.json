@@ -1,7 +1,7 @@
 {
   "name": "@dnbhq/release-config",
   "description": "Reusable release-it configuration for @davidsneighbour's projects.",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "license": "MIT",
   "repository": {
     "type": "git",

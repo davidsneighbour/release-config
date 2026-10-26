@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.1](https://github.com/davidsneighbour/release-config/compare/v2.0.0...v2.0.1) (2026-10-26)
+
+### Build
+
+* **deps:** update dependencies ([b0dfea9](https://github.com/davidsneighbour/release-config/commit/b0dfea93948b20eda81eb72c4b5562dedfaed8c4))
+* **deps:** upgrade @dnbhq/markdownlint-config to 2.0.0 ([641724d](https://github.com/davidsneighbour/release-config/commit/641724d37a1a2de8beaa4d0e424c37efd99142e3)), references [#2](https://github.com/davidsneighbour/release-config/issues/2)
+
 ## [2.0.0](https://github.com/davidsneighbour/release-config/compare/v1.1.5...v2.0.0) (2026-10-01)
 
 ### ⚠ BREAKING CHANGES

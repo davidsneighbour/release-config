@@ -5,12 +5,12 @@ authors:
     given-names: "Patrick"
     orcid: "https://orcid.org/0000-0001-6250-2135"
 title: "@dnbhq/release-config"
-version: v2.0.0
-date-released: 2026-10-02
+version: v2.0.1
+date-released: 2026-10-27
 url: "https://github.com/davidsneighbour/release-config"
 repository-code: "https://github.com/davidsneighbour/release-config"
 license: "MIT"
-commit: a09cb82c30d1ad14668f92f6cb5326ed35ecf47e
+commit: 641724d37a1a2de8beaa4d0e424c37efd99142e3
 keywords:
   - release-it
   - dnbhq
